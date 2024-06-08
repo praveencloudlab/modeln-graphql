@@ -1,0 +1,10 @@
+{
+    "development": {
+      "username": "your_username",
+      "password": "your_password",
+      "database": "your_database",
+      "host": "your_host",
+      "dialect": "oracle"
+    }
+  }
+  
