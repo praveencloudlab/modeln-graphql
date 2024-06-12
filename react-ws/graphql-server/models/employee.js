@@ -54,4 +54,17 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  // Custom static method to find employees by partial name
+  Employee.findByName = async function(name) {
+    return this.findAll({
+      where: {
+        name: {
+          [Sequelize.Op.like]: `%${name}%`
+        }
+      }
+    });
+  };
+
+  return Employee;
 };

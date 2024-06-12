@@ -22,6 +22,8 @@ export const GET_EMPLOYEES = gql`
   }
 `;
 
+
+
 export const GET_EMPLOYEE = gql`
   query GetEmployee($id: Int!) {
     employee(id: $id) {
@@ -212,6 +214,8 @@ const employeeService = {
     const response = await client.query({ query: GET_DEPARTMENT, variables: { id } });
     return response.data.department;
   },
+
+
   addDepartment: async (department) => {
     const response = await client.mutate({ mutation: ADD_DEPARTMENT, variables: department });
     return response.data.addDepartment;

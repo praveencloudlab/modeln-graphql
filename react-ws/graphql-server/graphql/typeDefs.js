@@ -28,8 +28,13 @@ const typeDefs = gql`
     designation(id: Int!): Designation
     employees: [Employee]
     employee(id: Int!): Employee
+    searchEmployeesByName(name: String!): [Employee] #customised query/function  
+    countEmployees: Int  # aggregate function
+    getEmployeesByDepartmentAndDesignation(departmentName: String!, designationTitle: String!): [Employee]
+
   }
 
+  
   type Mutation {
     addDepartment(name: String!): Department
     updateDepartment(id: Int!, name: String!): Department

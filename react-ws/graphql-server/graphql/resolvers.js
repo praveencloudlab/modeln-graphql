@@ -3,6 +3,7 @@ const { Department, Designation, Employee } = require('../models');
 const resolvers = {
   Query: {
     departments: async () => await Department.findAll(),
+    //departments: async () => await Department.findByName(name),
     department: async (_, { id }) => await Department.findByPk(id),
     designations: async () => await Designation.findAll(),
     designation: async (_, { id }) => await Designation.findByPk(id),
@@ -21,18 +22,53 @@ const resolvers = {
         { model: Employee, as: 'Manager' },
         { model: Employee, as: 'Subordinates' }
       ]
-    })
+    }),
+    searchEmployeesByName: async (root, { name }) => { 
+      try {
+        return await Employee.findByName(name); //# error:: Employee.findByName is not a function
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    countEmployees: async () => {  
+      try {
+        return await Employee.count();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
+    getEmployeesByDepartmentAndDesignation: async (root, { departmentName, designationTitle }) => { 
+      try {
+        const department = await Department.findOne({ where: { name: departmentName } });
+        const designation = await Designation.findOne({ where: { title: designationTitle } });
+  
+        if (!department || !designation) {
+          throw new Error('Department or Designation not found');
+        }
+  
+        return await Employee.findAll({
+          where: {
+            department_id: department.id,
+            designation_id: designation.id
+          }
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
   },
   Mutation: {
     addDepartment: async (_, { name }) => await Department.create({ name }),
     updateDepartment: async (_, { id, name }) => {
       const department = await Department.findByPk(id);
       department.name = name;
-      await department.save();
+      await department.save(); // if id already available then updates, other wise then saves
       return department;
     },
     deleteDepartment: async (_, { id }) => {
-      const department = await Department.findByPk(id);
+      const department = await Department.findByPk(id); // pulls out by id
       await department.destroy();
       return department;
     },
